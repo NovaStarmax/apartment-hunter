@@ -1,0 +1,7 @@
+- Faire un front.
+- Une API qui prend en paramètre le prix et le district et qui retourne un prix.
+- Faire un docker file.
+
+make run-back   # si tu veux juste le back
+make run-front  # si tu veux juste le front
+make dev        # les deux en même temps
