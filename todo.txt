@@ -1,0 +1,10 @@
+make run-back   # si tu veux juste le back
+make run-front  # si tu veux juste le front
+make dev        # les deux en même temps
+
+Faire le front pour prendre en input le nombre de chambre et salle de bain.
+Mettre le model dans l’api pour obtenir un prix estimé par notre algorithme.
+Écrire un message une template JSON pour mettre à jour les données.
+Faire une page descriptif des données streamlit.
+Faire le docker file.
+Trouver un hebergement distant gratuit.

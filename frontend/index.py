@@ -13,24 +13,55 @@ def load_data():
 df = load_data()
 
 st.set_page_config(
-    page_title="Apartment Hunter",
-    page_icon="🏠",
+    page_title="Estimateur",
+    page_icon="🔍",
 )
 
-st.write("# 🏠 Estimer votre bien à Madrid")
-st.markdown("## Veuillez sélectionner le quartier de votre bien")
+st.write("# 🔍 Veuillez remplir ce questionnaire")
 
-district = st.selectbox("Quartier", options=["Option 1", "Option 2", "Option 3"])
+# Créer deux colonnes list(range(1, 11)) + ["Rez de chaussé"]
+col1, col2 = st.columns(2)
 
-st.markdown("## Veuillez renseigner les m² de votre bien")
+with col1:
+    st.markdown("## Quartier")
+    district = st.selectbox("Quartier", options=["Option 1", "Option 2", "Option 3"], label_visibility="collapsed")
 
-surface = st.number_input(
-    "Surface",
-    min_value=int(df['sq_mt_built'].min()),
-    max_value=int(df['sq_mt_built'].max()),
-    value=int(df['sq_mt_built'].median()),
-    help="Surface totale construite de l'appartement"
-)
+    st.markdown("## Surface (m²)")
+    surface = st.number_input(
+        "Surface",
+        min_value=int(df['sq_mt_built'].min()),
+        max_value=int(df['sq_mt_built'].max()),
+        value=int(df['sq_mt_built'].median()),
+        help="Surface totale construite de l'appartement",
+        label_visibility="collapsed"
+    )
+
+    st.markdown("## Nombre de pièces")
+    n_rooms = st.selectbox("Nombre de pièces", index=1, options=list(range(1, 11)), label_visibility="collapsed")
+
+    st.markdown("## Nb de salles de bain")
+    n_bath = st.selectbox("Nombre de salles de bain", index=0, options=list(range(1, 5)), label_visibility="collapsed")
+
+
+with col2:
+    st.markdown("## Étage")
+    floor = st.selectbox("Étage", index=10, options=list(range(1, 11)) + ["Rez de chaussé"], label_visibility="collapsed")
+    
+    st.markdown("## Type de bien")
+    property_type = st.selectbox("Type de bien", options=["Appartement", "Maison", "Studio"], label_visibility="collapsed")
+
+    st.markdown("## Année du bien")
+    built_year = st.number_input(
+        "Année de construction",
+        min_value=1800,
+        max_value=2024,
+        value=2000,
+        help="Année de construction du bien",
+        label_visibility="collapsed"
+    )
+
+    st.markdown("## Classe énergétique")
+    energie_certificate = st.selectbox("Classe énergétique", index=2 ,options=["A", "B", "C", "D", "E", "F", "G"], label_visibility="collapsed")
 
 @st.dialog("Résultat de l'estimation")
 def show_result(data):

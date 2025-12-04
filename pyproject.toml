@@ -5,11 +5,13 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "black>=25.11.0",
     "boruta>=0.4.3",
     "fastapi>=0.123.4",
     "flask>=3.1.2",
     "gunicorn>=23.0.0",
     "ipykernel>=7.1.0",
+    "joblib>=1.5.2",
     "makefile>=1.1.0",
     "matplotlib>=3.10.7",
     "numpy>=2.3.5",
