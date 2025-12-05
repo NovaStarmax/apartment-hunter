@@ -3,88 +3,66 @@ import pandas as pd
 import requests
 
 DATA = 'data/houses_Madrid.csv'
-PREDICT_ENDPOINT = "http://localhost:8000/predict"
-
-@st.cache_data
-def load_data():
-    df = pd.read_csv(DATA)
-    return df
-
-df = load_data()
+METRICS_ENDPOINT = "http://localhost:8000/metrics"
 
 st.set_page_config(
-    page_title="Estimateur",
-    page_icon="🔍",
+    page_title="Apartment Hunter",
+    page_icon="🏠",
+    layout="wide"
 )
 
-st.write("# 🔍 Veuillez remplir ce questionnaire")
+st.markdown("""
+    <style>
+    .main-header {
+        text-align: center;
+        padding: 2rem 0;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        border-radius: 10px;
+        margin-bottom: 2rem;
+    }
+    .main-header h1 {
+        color: white;
+        font-size: 3rem;
+        margin: 0;
+    }
+    .subtitle {
+        text-align: center;
+        font-size: 1.3rem;
+        color: #666;
+        margin-bottom: 3rem;
+    }
+    .stButton>button {
+        width: 100%;
+        height: 150px;
+        font-size: 1.2rem;
+        font-weight: bold;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+    }
+    .stButton>button:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+    </style>
+""", unsafe_allow_html=True)
 
-# Créer deux colonnes list(range(1, 11)) + ["Rez de chaussé"]
-col1, col2 = st.columns(2)
+st.markdown('<div class="main-header"><h1>🏠 Apartment Hunter</h1></div>', unsafe_allow_html=True)
+
+st.markdown('<p class="subtitle">Votre assistant intelligent pour la recherche d\'appartements à Madrid</p>', unsafe_allow_html=True)
+
+st.markdown("<br>", unsafe_allow_html=True)
+
+# Cards pour les boutons
+col1, col2 = st.columns(2, gap="large")
 
 with col1:
-    st.markdown("## Quartier")
-    district = st.selectbox("Quartier", options=["Option 1", "Option 2", "Option 3"], label_visibility="collapsed")
-
-    st.markdown("## Surface (m²)")
-    surface = st.number_input(
-        "Surface",
-        min_value=int(df['sq_mt_built'].min()),
-        max_value=int(df['sq_mt_built'].max()),
-        value=int(df['sq_mt_built'].median()),
-        help="Surface totale construite de l'appartement",
-        label_visibility="collapsed"
-    )
-
-    st.markdown("## Nombre de pièces")
-    n_rooms = st.selectbox("Nombre de pièces", index=1, options=list(range(1, 11)), label_visibility="collapsed")
-
-    st.markdown("## Nb de salles de bain")
-    n_bath = st.selectbox("Nombre de salles de bain", index=0, options=list(range(1, 5)), label_visibility="collapsed")
-
+    st.markdown("### 📊 Exploration des données")
+    st.markdown("Visualisez et analysez les données immobilières de Madrid")
+    if st.button("Afficher les données", key="btn_data", use_container_width=True):
+        st.switch_page("pages/data_viz.py")
 
 with col2:
-    st.markdown("## Étage")
-    floor = st.selectbox("Étage", index=10, options=list(range(1, 11)) + ["Rez de chaussé"], label_visibility="collapsed")
-    
-    st.markdown("## Type de bien")
-    property_type = st.selectbox("Type de bien", options=["Appartement", "Maison", "Studio"], label_visibility="collapsed")
-
-    st.markdown("## Année du bien")
-    built_year = st.number_input(
-        "Année de construction",
-        min_value=1800,
-        max_value=2024,
-        value=2000,
-        help="Année de construction du bien",
-        label_visibility="collapsed"
-    )
-
-    st.markdown("## Classe énergétique")
-    energie_certificate = st.selectbox("Classe énergétique", index=2 ,options=["A", "B", "C", "D", "E", "F", "G"], label_visibility="collapsed")
-
-@st.dialog("Résultat de l'estimation")
-def show_result(data):
-    st.markdown("# 💰 Prix estimé")
-    st.write(f"{data['predicted_price']} €")
-
-    st.markdown("### 📍 Détails")
-    st.write(f"- Quartier : {data.get('input_district', district)}")
-    st.write(f"- Surface : {data.get('input_surface_m2', surface)} m²")
-    st.write(f"- Modèle : {data.get('model_version', 'inconnu')}")
-
-if st.button("Estimer le prix"):
-    payload = {
-        "district": district,
-        "surface_m2": int(surface),
-    }
-
-    try:
-        response = requests.post(PREDICT_ENDPOINT, json=payload, timeout=5)
-        response.raise_for_status()
-        data = response.json()
-
-        show_result(data)
-
-    except Exception as e:
-        st.error(f"Erreur lors de l'appel à l'API : {e}")
+    st.markdown("### 🎯 Performance des modèles")
+    st.markdown("Découvrez les métriques et performances de nos modèles ML")
+    if st.button("Voir les performances", key="btn_metrics", use_container_width=True):
+        st.switch_page("pages/metrics.py")

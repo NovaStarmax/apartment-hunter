@@ -1,8 +1,18 @@
 {
-  "name": "aa",
-  "metrics": {
-    "rmse": 0.2345,
-    "mae": 0.1234,
-    "r2_score": 0.9123
+  "linear_regression": {
+    "name": "Linear Regression",
+    "metrics": {
+      "rmse": 666666.7777777,
+      "mae": 35500.89,
+      "r2": 0.8421
+    }
+  },
+  "random_forest": {
+    "name": "Random Forest",
+    "metrics": {
+      "rmse": 50120.12,
+      "mae": 35500.89,
+      "r2": 0.8421
+    }
   }
 }
