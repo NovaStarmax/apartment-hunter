@@ -1,9 +1,11 @@
 from fastapi import FastAPI
-from .schema import PredictionInput, PredictionOutput
+from .schema import PredictionInputTest, PredictionOutputTest
 import json
 from functools import lru_cache
 from enum import Enum
 import os
+import pandas as pd
+import joblib
 import pandas as pd
 
 app = FastAPI()
@@ -21,13 +23,19 @@ def load_model_info():
 def read_root():
     return {"Hello": "World"}
 
-@app.post("/predict", response_model=PredictionOutput)
-def predict(input: PredictionInput):
-    return PredictionOutput(
-        predicted_price=123456,
-        input_district=input.district,
-        input_surface_m2=input.surface_m2,
-        model_version="v0.0-dummy"
+@app.post("/predicted", response_model=PredictionOutputTest)
+def predict(input: PredictionInputTest):
+    X = pd.DataFrame({
+        'sq_mt_built': [input.sq_mt_built],
+        'n_rooms': [input.n_rooms],
+        'n_bathrooms': [input.n_bathrooms]
+    })
+    pipeline = joblib.load('models/linear_regression_pipeline.joblib')
+
+    prediction = pipeline.predict(X)
+
+    return PredictionOutputTest(
+        predicted_price=prediction[0],
     )
 
 @app.get("/metrics/{model_name}")

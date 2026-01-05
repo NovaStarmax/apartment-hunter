@@ -1,9 +1,10 @@
 import streamlit as st
 import pandas as pd
 import requests
+from babel.numbers import format_currency
 
 DATA = 'data/houses_Madrid.csv'
-PREDICT_ENDPOINT = "http://localhost:8000/predict"
+PREDICT_ENDPOINT = "http://localhost:8000/predicted"
 METRICS_ENDPOINT = "http://localhost:8000/metrics"
 
 st.set_page_config(
@@ -56,7 +57,7 @@ with col1:
     st.markdown("## Quartier")
     district = st.selectbox("Quartier", options=["Option 1", "Option 2", "Option 3"], label_visibility="collapsed")
 
-    st.markdown("## Surface (m²)")
+    st.markdown("## Surface (m²) ✅")
     surface = st.number_input(
         "Surface",
         min_value=15,
@@ -66,10 +67,10 @@ with col1:
         label_visibility="collapsed"
     )
 
-    st.markdown("## Nombre de pièces")
+    st.markdown("## Nombre de pièces ✅")
     n_rooms = st.selectbox("Nombre de pièces", index=1, options=list(range(1, 11)), label_visibility="collapsed")
 
-    st.markdown("## Nb de salles de bain")
+    st.markdown("## Nb de salles de bain ✅")
     n_bath = st.selectbox("Nombre de salles de bain", index=0, options=list(range(1, 5)), label_visibility="collapsed")
 
 
@@ -96,12 +97,7 @@ with col2:
 @st.dialog("Résultat de l'estimation")
 def show_result(data):
     st.markdown("# 💰 Prix estimé")
-    st.write(f"{data['predicted_price']} €")
-
-    st.markdown("### 📍 Détails")
-    st.write(f"- Quartier : {data.get('input_district', district)}")
-    st.write(f"- Surface : {data.get('input_surface_m2', surface)} m²")
-    st.write(f"- Modèle : {data.get('model_version', 'inconnu')}")
+    st.write(format_currency(data['predicted_price'], 'EUR', locale='fr_FR'))
 
 if st.button("Back to metrics"):
     st.switch_page("pages/metrics.py")
@@ -112,14 +108,9 @@ if st.button("Estimer le prix"):
         st.stop()
     
     payload = {
-        "district": district,
-        "surface_m2": int(surface),
+        "sq_mt_built": int(surface),
         "n_rooms": n_rooms,
-        "n_bath": n_bath,
-        "floor": floor,
-        "property_type": property_type,
-        "built_year": built_year,
-        "energie_certificate": energie_certificate,
+        "n_bathrooms": n_bath,
     }
 
     try:
