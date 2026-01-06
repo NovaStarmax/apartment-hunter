@@ -1,10 +1,12 @@
 import streamlit as st
 import requests
 from babel.numbers import format_currency
+import os
 
-PREDICT_ENDPOINT = "http://localhost:8000/predicted"
-METRICS_ENDPOINT = "http://localhost:8000/metrics"
-SPECIFIC_MODEL_ENDPOINT = "http://localhost:8000/metric"
+API_URL = os.getenv("API_URL", "http://localhost:8000")
+PREDICT_ENDPOINT = f"{API_URL}/predicted"
+METRICS_ENDPOINT = f"{API_URL}/metrics"
+SPECIFIC_MODEL_ENDPOINT = f"{API_URL}/metric"
 
 st.set_page_config(
     page_title="Estimateur",
@@ -138,7 +140,7 @@ if st.button("Estimer le prix"):
         st.stop()
 
     payload = {
-        "display_name": all_models[selected_model]['name'],
+        "display_name": all_models[selected_model]["name"],
         "artifact_name": all_models[selected_model]["artifact_name"],
         "sq_mt_built": int(surface),
         "n_rooms": n_rooms,

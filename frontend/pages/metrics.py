@@ -1,8 +1,10 @@
 import streamlit as st
 import pandas as pd
 import requests
+import os
 
-METRICS_ENDPOINT = "http://localhost:8000/metrics"
+API_URL = os.getenv("API_URL", "http://localhost:8000")
+METRICS_ENDPOINT = f"{API_URL}/metrics"
 
 st.set_page_config(
     page_title="Metriques",

@@ -1,9 +1,11 @@
 import streamlit as st
 import pandas as pd
 import requests
+import os
 
-DATASETS_ENDPOINT = "http://localhost:8000/datas"
-DATA_ENDPOINT = "http://localhost:8000/data"
+API_URL = os.getenv("API_URL", "http://localhost:8000")
+DATASETS_ENDPOINT = f"{API_URL}/datas"
+DATA_ENDPOINT = f"{API_URL}/data"
 
 st.set_page_config(
     page_title="Visualisation des données",
