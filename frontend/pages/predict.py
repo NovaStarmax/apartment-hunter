@@ -1,11 +1,10 @@
 import streamlit as st
-import pandas as pd
 import requests
 from babel.numbers import format_currency
 
-DATA = 'data/houses_Madrid.csv'
 PREDICT_ENDPOINT = "http://localhost:8000/predicted"
 METRICS_ENDPOINT = "http://localhost:8000/metrics"
+SPECIFIC_MODEL_ENDPOINT = "http://localhost:8000/metric"
 
 st.set_page_config(
     page_title="Estimateur",
@@ -14,7 +13,6 @@ st.set_page_config(
 
 st.markdown("# 🏠 Estimation immobilière")
 
-# Récupération des modèles
 all_models = {}
 try:
     response = requests.get(METRICS_ENDPOINT, timeout=5)
@@ -31,7 +29,9 @@ model_names[""] = "-- Sélectionnez un modèle --"
 
 # Récupérer le modèle pré-sélectionné depuis metrics (s'il existe)
 preselected_model = st.session_state.get("selected_model", "")
-default_index = model_options.index(preselected_model) if preselected_model in model_options else 0
+default_index = (
+    model_options.index(preselected_model) if preselected_model in model_options else 0
+)
 
 # Selectbox pour choisir le modèle
 selected_model = st.selectbox(
@@ -39,7 +39,7 @@ selected_model = st.selectbox(
     options=model_options,
     index=default_index,
     format_func=lambda x: model_names[x],
-    key="predict_model_select"
+    key="predict_model_select",
 )
 
 if not selected_model:
@@ -55,7 +55,11 @@ col1, col2 = st.columns(2)
 
 with col1:
     st.markdown("## Quartier")
-    district = st.selectbox("Quartier", options=["Option 1", "Option 2", "Option 3"], label_visibility="collapsed")
+    district = st.selectbox(
+        "Quartier",
+        options=["Option 1", "Option 2", "Option 3"],
+        label_visibility="collapsed",
+    )
 
     st.markdown("## Surface (m²) ✅")
     surface = st.number_input(
@@ -64,22 +68,41 @@ with col1:
         max_value=399,
         value=60,
         help="Surface totale construite de l'appartement",
-        label_visibility="collapsed"
+        label_visibility="collapsed",
     )
 
     st.markdown("## Nombre de pièces ✅")
-    n_rooms = st.selectbox("Nombre de pièces", index=1, options=list(range(1, 11)), label_visibility="collapsed")
+    n_rooms = st.selectbox(
+        "Nombre de pièces",
+        index=1,
+        options=list(range(1, 11)),
+        label_visibility="collapsed",
+    )
 
     st.markdown("## Nb de salles de bain ✅")
-    n_bath = st.selectbox("Nombre de salles de bain", index=0, options=list(range(1, 5)), label_visibility="collapsed")
+    n_bath = st.selectbox(
+        "Nombre de salles de bain",
+        index=0,
+        options=list(range(1, 5)),
+        label_visibility="collapsed",
+    )
 
 
 with col2:
     st.markdown("## Étage")
-    floor = st.selectbox("Étage", index=10, options=list(range(1, 11)) + ["Rez de chaussé"], label_visibility="collapsed")
-    
+    floor = st.selectbox(
+        "Étage",
+        index=10,
+        options=list(range(1, 11)) + ["Rez de chaussé"],
+        label_visibility="collapsed",
+    )
+
     st.markdown("## Type de bien")
-    property_type = st.selectbox("Type de bien", options=["Appartement", "Maison", "Studio"], label_visibility="collapsed")
+    property_type = st.selectbox(
+        "Type de bien",
+        options=["Appartement", "Maison", "Studio"],
+        label_visibility="collapsed",
+    )
 
     st.markdown("## Année du bien")
     built_year = st.number_input(
@@ -88,16 +111,23 @@ with col2:
         max_value=2024,
         value=2000,
         help="Année de construction du bien",
-        label_visibility="collapsed"
+        label_visibility="collapsed",
     )
 
     st.markdown("## Classe énergétique")
-    energie_certificate = st.selectbox("Classe énergétique", index=2 ,options=["A", "B", "C", "D", "E", "F", "G"], label_visibility="collapsed")
+    energie_certificate = st.selectbox(
+        "Classe énergétique",
+        index=2,
+        options=["A", "B", "C", "D", "E", "F", "G"],
+        label_visibility="collapsed",
+    )
+
 
 @st.dialog("Résultat de l'estimation")
 def show_result(data):
     st.markdown("# 💰 Prix estimé")
-    st.write(format_currency(data['predicted_price'], 'EUR', locale='fr_FR'))
+    st.write(format_currency(data["predicted_price"], "EUR", locale="fr_FR"))
+
 
 if st.button("Back to metrics"):
     st.switch_page("pages/metrics.py")
@@ -106,8 +136,10 @@ if st.button("Estimer le prix"):
     if not selected_model:
         st.error("⚠️ Veuillez sélectionner un modèle avant d'estimer le prix")
         st.stop()
-    
+
     payload = {
+        "display_name": all_models[selected_model]['name'],
+        "artifact_name": all_models[selected_model]["artifact_name"],
         "sq_mt_built": int(surface),
         "n_rooms": n_rooms,
         "n_bathrooms": n_bath,

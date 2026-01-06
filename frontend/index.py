@@ -1,9 +1,4 @@
 import streamlit as st
-import pandas as pd
-import requests
-
-DATA = 'data/houses_Madrid.csv'
-METRICS_ENDPOINT = "http://localhost:8000/metrics"
 
 st.set_page_config(
     page_title="Apartment Hunter",

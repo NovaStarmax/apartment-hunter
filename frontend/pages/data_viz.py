@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import requests
-from io import StringIO
 
 DATASETS_ENDPOINT = "http://localhost:8000/datas"
 DATA_ENDPOINT = "http://localhost:8000/data"
@@ -14,7 +13,6 @@ st.set_page_config(
 
 st.header("📊 Visualisation des Données")
 
-# Récupération de la liste des datasets
 try:
     response = requests.get(DATASETS_ENDPOINT, timeout=5)
     response.raise_for_status()
@@ -59,7 +57,6 @@ if selected_dataset:
             for col, dtype in data_info['columns'].items()
         ])
         
-        # Ajouter des emojis selon le type
         def get_type_emoji(dtype):
             if 'int' in dtype:
                 return "🔢"
@@ -84,7 +81,6 @@ if selected_dataset:
             hide_index=True
         )
         
-        # Statistiques sur les types
         with st.expander("📈 Répartition des types de données"):
             type_counts = columns_df['Type'].str.extract(r'(int|float|bool|object)')[0].value_counts()
             col1, col2 = st.columns([2, 1])

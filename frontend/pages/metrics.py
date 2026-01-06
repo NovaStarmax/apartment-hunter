@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 import requests
 
-DATA = 'data/houses_Madrid.csv'
 METRICS_ENDPOINT = "http://localhost:8000/metrics"
 
 st.set_page_config(
@@ -16,7 +15,7 @@ try:
     response = requests.get(METRICS_ENDPOINT, timeout=5)
     response.raise_for_status()
     all_models = response.json()
-    
+
 except Exception as e:
     st.error(f"Erreur lors de l'appel à l'API : {e}")
     st.stop()
@@ -29,10 +28,10 @@ model_names = {key: all_models[key]["name"] for key in all_models.keys()}
 model_names[""] = "-- Sélectionnez un modèle --"
 
 selected_model = st.selectbox(
-    "Modèle", 
+    "Modèle",
     options=model_options,
     format_func=lambda x: model_names[x],
-    key="model_select"
+    key="model_select",
 )
 
 if "show_metrics" not in st.session_state:
@@ -44,16 +43,21 @@ if selected_model and st.button("Afficher les métriques"):
 
 if selected_model and st.session_state.show_metrics:
     model_data = all_models[selected_model]
-    
+
     st.markdown(f"## Modèle : {model_data['name']}")
-    
+
     metrics = model_data.get("metrics", {})
+    params = model_data.get("parameters", {})
+
     if metrics:
-        metrics_df = pd.DataFrame.from_dict(metrics, orient='index', columns=['Valeur'])
-        st.table(metrics_df)
+        metrics_df = pd.DataFrame(list(metrics.items()), columns=["Métrique", "Valeur"])
+        params_df = pd.DataFrame(list(params.items()), columns=["Paramètre", "Valeur"])
+        st.dataframe(metrics_df, hide_index=True, use_container_width=True)
+        st.markdown("### Paramètres du modèle")
+        st.dataframe(params_df, hide_index=True, use_container_width=True)
     else:
         st.write("Aucune métrique disponible pour ce modèle.")
-    
+
     st.markdown("---")
     if st.button("Prédire votre bien", key="btn_predict", use_container_width=True):
         st.session_state.selected_model = selected_model  # Persister avant navigation
@@ -62,4 +66,3 @@ if selected_model and st.session_state.show_metrics:
 elif not selected_model:
     st.session_state.show_metrics = False
     st.info("👆 Veuillez sélectionner un modèle ci-dessus")
-
