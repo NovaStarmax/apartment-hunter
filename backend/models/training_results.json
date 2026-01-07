@@ -1,0 +1,28 @@
+{
+  "linear_regression": {
+    "name": "Linear Regression",
+    "artifact_name": "linear_regression_model.joblib",
+    "metrics": {
+      "rmse": 666666.7777777,
+      "mae": 35500.89,
+      "r2": 0.8421
+    },
+    "parameters": {
+      "fit_intercept": true,
+      "normalize": false
+    }
+  },
+  "random_forest": {
+    "name": "Random Forest",
+    "artifact_name": "random_forest_model.joblib",
+    "metrics": {
+      "rmse": 50120.12,
+      "mae": 35500.89,
+      "r2": 0.8421
+    },
+    "parameters": {
+      "n_estimators": 100,
+      "max_depth": 10
+    }
+  }
+}
