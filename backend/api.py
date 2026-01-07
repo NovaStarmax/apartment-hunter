@@ -2,17 +2,11 @@ from fastapi import FastAPI
 from .schema import PredictionInputTest, PredictionOutputTest
 import json
 from functools import lru_cache
-from enum import Enum
 import pandas as pd
 import joblib
 from pathlib import Path
 
 app = FastAPI()
-
-
-class ModelName(str, Enum):
-    linear_regression = "linear_regression"
-    random_forest = "random_forest"
 
 
 @lru_cache()
@@ -49,14 +43,13 @@ def predict(input: PredictionInputTest) -> PredictionOutputTest:
 
 
 @app.get("/metric/{model_name}")
-def get_model_info(model_name: ModelName):
+def get_model_info(model_name: str) -> dict:
     model_info = load_model_info()
     return model_info[model_name]
 
 
 @app.get("/metrics")
 def get_all_metrics() -> dict:
-    """Récupère les métriques de tous les modèles."""
     return load_model_info()
 
 
