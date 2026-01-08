@@ -8,8 +8,8 @@
       "r2": 0.7863
     },
     "parameters": {
-      "fit_intercept": false,
-      "normalize": false
+      "fit_intercept": "false",
+      "normalize": "false"
     }
   },
   "random_forest": {
