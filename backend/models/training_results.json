@@ -3,12 +3,12 @@
     "name": "Linear Regression",
     "artifact_name": "linear_regression_model.joblib",
     "metrics": {
-      "rmse": 666666.7777777,
-      "mae": 35500.89,
-      "r2": 0.8421
+      "rmse": 347632.05,
+      "mae": 194818.98,
+      "r2": 0.7863
     },
     "parameters": {
-      "fit_intercept": true,
+      "fit_intercept": false,
       "normalize": false
     }
   },
@@ -16,13 +16,29 @@
     "name": "Random Forest",
     "artifact_name": "random_forest_model.joblib",
     "metrics": {
-      "rmse": 50120.12,
-      "mae": 35500.89,
-      "r2": 0.8421
+      "rmse": 218940.01,
+      "mae": 95158.65,
+      "r2": 0.9152
     },
     "parameters": {
-      "n_estimators": 100,
-      "max_depth": 10
+      "n_estimators": 200,
+      "max_depth": 20,
+      "min_samples_split": 2,
+      "min_samples_leaf": 1
+    }
+  },
+  "svr": {
+    "name": "SVR",
+    "artifact_name": "svr_model.joblib",
+    "metrics": {
+      "rmse": 804360.53,
+      "mae": 447280.09,
+      "r2": -0.144
+    },
+    "parameters": {
+      "C": 10,
+      "epsilon": 0.1,
+      "kernel": "rbf"
     }
   }
 }

@@ -1,18 +1,12 @@
 from fastapi import FastAPI
-from .schema import PredictionInputTest, PredictionOutputTest
+from .schema import PredictionOutput, PredictionInput
 import json
 from functools import lru_cache
-from enum import Enum
 import pandas as pd
 import joblib
 from pathlib import Path
 
 app = FastAPI()
-
-
-class ModelName(str, Enum):
-    linear_regression = "linear_regression"
-    random_forest = "random_forest"
 
 
 @lru_cache()
@@ -21,18 +15,35 @@ def load_model_info():
         return json.load(f)
 
 
-def build_dataframe(input: PredictionInputTest) -> pd.DataFrame:
+def build_dataframe(input: PredictionInput) -> pd.DataFrame:
     return pd.DataFrame(
         {
             "sq_mt_built": [input.sq_mt_built],
             "n_rooms": [input.n_rooms],
             "n_bathrooms": [input.n_bathrooms],
+            "floor": [input.floor],
+            "is_renewal_needed": [input.is_renewal_needed],
+            "is_new_development": [input.is_new_development],
+            "built_year": [input.built_year],
+            "has_ac": [input.has_ac],
+            "has_lift": [input.has_lift],
+            "is_exterior": [input.is_exterior],
+            "has_garden": [input.has_garden],
+            "has_pool": [input.has_pool],
+            "has_terrace": [input.has_terrace],
+            "has_storage_room": [input.has_storage_room],
+            "energy_certificate": [input.energy_certificate],
+            "has_parking": [input.has_parking],
+            "neigh_price_m2": [input.neigh_price_m2],
+            "neighborhood": [input.neighborhood],
+            "district": [input.district],
+            "house_type": [input.house_type],
         }
     )
 
 
-@app.post("/predicted", response_model=PredictionOutputTest)
-def predict(input: PredictionInputTest) -> PredictionOutputTest:
+@app.post("/predicted", response_model=PredictionOutput)
+def predict(input: PredictionInput) -> PredictionOutput:
     model = input.artifact_name
     try:
         pipeline = joblib.load(Path(__file__).parent / "models" / model)
@@ -43,20 +54,19 @@ def predict(input: PredictionInputTest) -> PredictionOutputTest:
     X = build_dataframe(input)
     prediction = pipeline.predict(X)
 
-    return PredictionOutputTest(
+    return PredictionOutput(
         predicted_price=prediction[0],
     )
 
 
 @app.get("/metric/{model_name}")
-def get_model_info(model_name: ModelName):
+def get_model_info(model_name: str) -> dict:
     model_info = load_model_info()
     return model_info[model_name]
 
 
 @app.get("/metrics")
 def get_all_metrics() -> dict:
-    """Récupère les métriques de tous les modèles."""
     return load_model_info()
 
 
