@@ -233,7 +233,7 @@ district_list = sorted(districts.keys())
 default_district = "Centro" if "Centro" in district_list else district_list[0]
 
 district = st.selectbox(
-    "Quartier", options=district_list, index=district_list.index(default_district)
+    "Secteur", options=district_list, index=district_list.index(default_district)
 )
 
 neighborhood_list = districts.get(district, [])
