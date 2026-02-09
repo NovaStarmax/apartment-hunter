@@ -32,3 +32,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Model random forest trop lourd
+backend/models/random_forest_model.joblib

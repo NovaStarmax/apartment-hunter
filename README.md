@@ -163,3 +163,19 @@ This project demonstrates:
 - Clear separation between training and inference
 - Production deployment of an ML model
 - Full application containerization
+
+---
+
+## Training the Random Forest Model
+
+The Random Forest model is too large to be versioned in Git. To train it:
+
+1. Open and run the notebook `notebooks/Train_model.ipynb`
+2. The trained model will be saved in: `notebooks/models_artifacts/random_forest_model.joblib`
+3. Move it to the backend folder:
+
+```bash
+cp notebooks/models_artifacts/random_forest_model.joblib backend/models/random_forest_model.joblib
+```
+
+The model will then be available for predictions through the API.

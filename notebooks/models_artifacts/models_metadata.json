@@ -3,10 +3,10 @@
         "name": "Random Forest",
         "artifact_name": "random_forest_model.joblib",
         "metrics": {
-            "rmse": 121735.48,
-            "mae": 64117.69,
-            "r2": 0.9422,
-            "mape_percent": 12.69
+            "rmse": 121926.78,
+            "mae": 64464.0,
+            "r2": 0.942,
+            "mape_percent": 12.72
         },
         "parameters": {
             "bootstrap": true,
@@ -33,10 +33,10 @@
         "name": "SVR (Support Vector)",
         "artifact_name": "svr_model.joblib",
         "metrics": {
-            "rmse": 168031.97,
-            "mae": 91268.67,
-            "r2": 0.8898,
-            "mape_percent": 17.11
+            "rmse": 168170.46,
+            "mae": 91283.97,
+            "r2": 0.8897,
+            "mape_percent": 17.1
         },
         "parameters": {
             "C": 10,
@@ -56,9 +56,9 @@
         "name": "Linear Regression",
         "artifact_name": "linear_regression_model.joblib",
         "metrics": {
-            "rmse": 221087.04,
-            "mae": 109585.0,
-            "r2": 0.8093,
+            "rmse": 221046.34,
+            "mae": 109576.69,
+            "r2": 0.8094,
             "mape_percent": 19.1
         },
         "parameters": {
